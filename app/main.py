@@ -18,7 +18,7 @@ def get_service() -> RAGService:
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "ai_configured": bool(settings.openai_api_key)}
+    return {"status": "ok", "ai_provider": settings.resolved_provider}
 
 
 @app.post("/documents/upload", response_model=DocumentInfo, status_code=status.HTTP_201_CREATED)
@@ -63,4 +63,3 @@ def ask(request: AskRequest, rag: RAGService = Depends(get_service)):
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except RuntimeError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
-

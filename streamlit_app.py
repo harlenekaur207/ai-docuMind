@@ -9,10 +9,25 @@ API_URL = os.getenv("API_URL", "http://localhost:8000")
 st.set_page_config(page_title="DocuMind AI", page_icon="📚", layout="wide")
 st.markdown("""
 <style>
-    .stApp { background: #f5f4ef; }
-    [data-testid="stSidebar"] { background: #173b35; color: white; }
-    [data-testid="stSidebar"] * { color: white; }
+    .stApp { background: #f5f4ef; color: #173b35; }
+    [data-testid="stMain"],
+    [data-testid="stMain"] h1,
+    [data-testid="stMain"] h2,
+    [data-testid="stMain"] h3,
+    [data-testid="stMain"] p,
+    [data-testid="stMain"] label,
+    [data-testid="stMain"] span { color: #173b35 !important; }
+    [data-testid="stSidebar"] { background: #173b35; color: #ffffff; }
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] span { color: #ffffff !important; }
+    [data-testid="stChatInput"] textarea,
+    [data-testid="stChatInput"] textarea::placeholder { color: #f5f4ef !important; }
     .source { padding: 1rem; border: 1px solid #d8d3c5; border-radius: 10px; background: white; margin-bottom: .75rem; }
+    .source, .source * { color: #173b35 !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -100,4 +115,3 @@ if question:
                     st.error(api_error(response))
             except requests.RequestException:
                 st.error("Cannot reach the API. Please try again.")
-

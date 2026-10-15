@@ -6,7 +6,8 @@ DocuMind AI is an evidence-first document assistant. Upload text-based PDFs, ask
 
 - PDF type, size, signature, readability, and empty-text validation
 - Page-aware text extraction and overlapping chunks
-- OpenAI `text-embedding-3-small` embeddings stored in persistent ChromaDB
+- Free local Ollama models by default, with optional OpenAI support
+- `nomic-embed-text` or OpenAI embeddings stored in persistent ChromaDB
 - Semantic search across multiple documents
 - Grounded answer generation with page-level citations and unknown-answer handling
 - Document listing and deletion
@@ -25,7 +26,7 @@ The backend owns document processing and retrieval. Streamlit is a thin API clie
 
 ## Run locally
 
-Prerequisites: Python 3.12 and an OpenAI API key with available credits.
+Prerequisites: Python 3.12 and Ollama, or an OpenAI API key with available credits.
 
 ```bash
 python3.12 -m venv .venv
@@ -34,7 +35,14 @@ pip install -r requirements-dev.txt
 cp .env.example .env
 ```
 
-Add your key to `.env`, then run these commands in separate terminals:
+For free local mode, install Ollama and download the models:
+
+```bash
+ollama pull llama3.2:3b
+ollama pull nomic-embed-text
+```
+
+Keep Ollama running, then run these commands in separate terminals:
 
 ```bash
 make api
@@ -47,11 +55,12 @@ Open `http://localhost:8501`. API documentation is available at `http://localhos
 
 ```bash
 cp .env.example .env
-# Add OPENAI_API_KEY to .env
 docker compose up --build
 ```
 
 The application stores uploads and the Chroma index in a named Docker volume.
+
+The default `AI_PROVIDER=auto` uses OpenAI when `OPENAI_API_KEY` is set and otherwise uses local Ollama. To force a provider, set `AI_PROVIDER=ollama` or `AI_PROVIDER=openai` in `.env`.
 
 ## API
 
@@ -82,4 +91,3 @@ The API tests replace the external AI/vector service with a deterministic fake, 
 ## Suggested portfolio evaluation
 
 Create a CSV with question, expected document/page, expected answer facts, retrieved pages, answer, citations, and latency. Report retrieval hit rate, answer correctness, citation correctness, refusal correctness, and p50/p95 latency. Keep the evaluation PDFs and expected outputs versioned, but never commit private documents or API keys.
-
